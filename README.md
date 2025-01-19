@@ -26,4 +26,5 @@
         # ここにユーザーを取得するロジックを追加
         return User(id=user_id, name="John Doe", email="john.doe@example.com")
     ```
-* 楽しむ 
+* 仮想環境にはpoetryを使ってほしい。時間がない場合は任意の仮想環境で良い
+* flake8を使用して書式を整えてからMRを作成する 
