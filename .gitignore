@@ -12,4 +12,6 @@ __pycache__/
 *.pyo
 *.pyd
 
+# screenshot images
+screenshots/
 
