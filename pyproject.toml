@@ -1,0 +1,13 @@
+[project]
+name = "one-app-challenge"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cv>=1.0.0",
+    "mediapipe>=0.10.20",
+    "opencv-python>=4.11.0.86",
+    "pyautogui>=0.9.54",
+    "ruff>=0.9.3",
+]
