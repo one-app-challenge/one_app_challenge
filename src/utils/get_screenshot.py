@@ -1,6 +1,6 @@
 # 引数として数字(int)を渡したときに、10以下の場合にスクショして保存
 # 専用ディレクトリに保存する関数の仮作成
-# PyAutoGUIがつかえ
+# PyAutoGUIを使用
 import time
 import os
 import pyautogui
@@ -24,11 +24,11 @@ def get_screen_shot(input_number: InputNumber) -> bool:
     """
 
     if input_number.num_int <= 10:
-        # ディレクトリ定義、ない場合は作成します
+        # ディレクトリを定義、ない場合は作成する
         screenshots_dir = "screenshots"
         if not os.path.exists(screenshots_dir):
             os.makedirs(screenshots_dir)
-        # ファイル名用の時刻get
+        # ファイル名用の時刻を取得する
         current_time = time.strftime("%Y%m%d%H%M%S")
         # 一応1秒待つ
         time.sleep(1)
@@ -37,7 +37,7 @@ def get_screen_shot(input_number: InputNumber) -> bool:
         print("Screenshot saved")
         return True
     else:
-        # 入力された数値が10より大きい場合はスクリーンショットを撮りません
+        # 入力された数値が10より大きい場合は撮らない
         print(f"Number is {input_number.num_int}, not taking screenshot")
         return False
 
