@@ -32,3 +32,9 @@
 ## 実行方法
 * src/ でpoetry shellを実行して仮想環境を構築する
 * cd backで、``` python fast_gesture.py``` を実行する
+
+## 依存関係を調べる
+graphvizとpydepsをインストール
+``` $ pydeps fast_gesture.py --max-module-depth=1``` のように調べたファイルを指定して実行する
+
+![dependencies](./doc/img/dependencies.png)
