@@ -11,6 +11,11 @@ opencv-python = "^4.11.0.86"
 mediapipe = "^0.10.20"
 
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+graphviz = "^0.20.3"
+pydeps = "^3.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

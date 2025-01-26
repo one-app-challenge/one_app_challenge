@@ -1,20 +1,23 @@
-import os
+# 組み込みライブラリ
 import time
+# サードパーティライブラリ
 import cv2
-
+# 自作モジュール
 from video_capture import VideoCapture
 import hand_tracking_module as htm
-from functions import set_volume, draw_hand_landmarks
+from functions import Functions
 import logger
 
-# ロガーの設定
-logger = logger.get_logger(name=__name__, debug=True)
-
-
+# 各種インスタンスの生成
+logger = logger.get_logger(
+    name=__name__,
+    debug=True
+)
 detector = htm.HandDetector(
     detection_confidence=0.7,
     tracking_confidence=0.7
 )
+functions = Functions()
 
 # parameters
 wCam, hCam = 300, 300
@@ -37,7 +40,7 @@ while True:
         lm_list = detector.find_position(frame)
 
         if len(lm_list) != 0:
-            length = draw_hand_landmarks(frame, lm_list)
+            length = functions.draw_hand_landmarks(frame, lm_list)
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
@@ -50,7 +53,7 @@ while True:
                 else:
                     volume = 0
 
-                set_volume(volume)
+                functions.set_volume(volume)
                 print(f"Length: {length}, Volume: {volume}")
 
     # フレームをリサイズ

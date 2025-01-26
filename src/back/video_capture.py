@@ -46,4 +46,3 @@ class VideoCapture:
         self.started = False
         self.thread.join()
         logger.debug("Video capturing stopped.")
-
