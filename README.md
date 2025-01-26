@@ -28,3 +28,7 @@
     ```
 * 仮想環境にはpoetryを使ってほしい。時間がない場合は任意の仮想環境で良い
 * flake8を使用して書式を整えてからMRを作成する 
+
+## 実行方法
+* src/ でpoetry shellを実行して仮想環境を構築する
+* cd backで、``` python fast_gesture.py``` を実行する

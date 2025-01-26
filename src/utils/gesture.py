@@ -4,7 +4,7 @@ import time
 import numpy as np
 import math
 
-import hand_tracking_module as htm
+import one_app_challenge.src.back.hand_tracking_module as htm
 
 detector = htm.HandDetector(
     detection_confidence=0.7,
