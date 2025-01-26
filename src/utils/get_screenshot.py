@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 
 # PydanticでBaseModel使用して、入力値の型チェック用のクラスを作成
+# それぞれ２つのinput変数用に作成
 class DistanceInput(BaseModel):
     distance_of_two_fingers: float  # floatのみ許可
 
