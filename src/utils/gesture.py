@@ -39,6 +39,7 @@ while cap.isOpened():
 
     frame = detector.find_hands(frame)
     lm_list = detector.find_position(frame)
+    print
     if len(lm_list) != 0:
         # print(lm_list[4], lm_list[8])
         # この辺りの番号はmediapipeのドキュメントを参照, 4は親指、8は人差し指?
