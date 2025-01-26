@@ -19,7 +19,7 @@ class ThresholdInput(BaseModel):
 
 def get_screen_shot(
     distance_input: DistanceInput,
-    threshold_input: ThresholdInput = ThresholdInput(threshold=10),
+    threshold_input: ThresholdInput,
 ) -> bool:
     """
     It takes a screenshot and saves it to a directory if the distance of two fingers is less than or equal to the threshold.
