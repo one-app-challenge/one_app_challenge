@@ -8,23 +8,30 @@ from pydantic import BaseModel
 
 
 # PydanticでBaseModel使用して、入力値の型チェック用のクラスを作成
-class InputNumber(BaseModel):
-    num_float: float  # floatのみ許可
+class DistanceInput(BaseModel):
+    distance_of_two_fingers: float  # floatのみ許可
 
 
-def get_screen_shot(input_number: InputNumber, threshold: InputNumber = 10) -> bool:
+class ThresholdInput(BaseModel):
+    threshold: float  # floatのみ許可
+
+
+def get_screen_shot(
+    distance_input: DistanceInput,
+    threshold_input: ThresholdInput = ThresholdInput(threshold=10),
+) -> bool:
     """
-    It takes a screenshot and saves it to a directory if the input number is less than or equal to the threshold.
+    It takes a screenshot and saves it to a directory if the distance of two fingers is less than or equal to the threshold.
 
     Args:
-        input_number (InputNumber): An instance of InputNumber class
-        threshold (float): The threshold number to compare against
+        distance_input (DistanceInput): An instance of DistanceInput class
+        threshold_input (ThresholdInput): An instance of ThresholdInput class
 
     Returns:
         bool: True if the screenshot is taken and saved, False otherwise
     """
 
-    if input_number.num_float <= threshold:
+    if distance_input.distance_of_two_fingers <= threshold_input.threshold:
         # ディレクトリを定義、ない場合は作成する
         screenshots_dir = "screenshots"
         if not os.path.exists(screenshots_dir):
@@ -37,18 +44,30 @@ def get_screen_shot(input_number: InputNumber, threshold: InputNumber = 10) -> b
         print("Screenshot saved")
         return True
     else:
-        # 入力された数値が10より大きい場合は撮らない
-        print(f"Number is {input_number.num_float}, not taking screenshot")
+        # distance_of_two_fingersがthresholdより大きいので、スクショは撮らない
+        print(
+            f"Number is {distance_input.distance_of_two_fingers}, not taking screenshot"
+        )
         return False
 
 
-# 以下はテスト用
-# ユーザーにinputで数値入力させる→Pydanticの設定通す（InputNumberクラスのインスタンスに変換）
+# [以下はテスト用]
+# ユーザーにinputで数値入力させる→Pydanticの設定通す（DistanceInputクラスのインスタンスに変換）
 # （上記の続き）→ それ使って実行
-num_float = float(input("Enter a number: "))
-input_number = InputNumber(num_float=num_float)
-print(f"Input number is {input_number.num_float}, threshold is 10 (this is default)")
-get_screen_shot(input_number, threshold=10)
+
+# ユーザーにdistance_of_two_fingersを入力させる
+distance_of_two_fingers = float(input("Enter the distance of two fingers: "))
+distance_input = DistanceInput(distance_of_two_fingers=distance_of_two_fingers)
+
+# デフォルトのthresholdの値を設定
+threshold_input = ThresholdInput(threshold=10)
+
+# printで一言表示したうえで、get_screen_shot関数を実行
+print(
+    f"Distance is {distance_input.distance_of_two_fingers}, threshold is {threshold_input.threshold} (this is default)"
+)
+get_screen_shot(distance_input, threshold_input)
+
 
 if __name__ == "get_screen_shot":
     get_screen_shot()
