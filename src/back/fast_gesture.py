@@ -1,7 +1,9 @@
 # 組み込みライブラリ
 import time
+
 # サードパーティライブラリ
 import cv2
+
 # 自作モジュール
 from video_capture import VideoCapture
 import hand_tracking_module as htm
@@ -9,14 +11,8 @@ from functions import Functions
 import logger
 
 # 各種インスタンスの生成
-logger = logger.get_logger(
-    name=__name__,
-    debug=True
-)
-detector = htm.HandDetector(
-    detection_confidence=0.7,
-    tracking_confidence=0.7
-)
+logger = logger.get_logger(name=__name__, debug=True)
+detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 functions = Functions()
 
 # parameters
@@ -61,15 +57,19 @@ while True:
 
     # フレームをJPEG圧縮して画質を落とす
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]  # 画質を20%に設定
-    result, encimg = cv2.imencode('.jpg', frame, encode_param)
+    result, encimg = cv2.imencode(".jpg", frame, encode_param)
     frame = cv2.imdecode(encimg, 1)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
 
-    cv2.putText(frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-    cv2.putText(frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    cv2.putText(
+        frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
+    cv2.putText(
+        frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
 
     cv2.imshow("frame", frame)
 

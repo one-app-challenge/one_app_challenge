@@ -41,6 +41,24 @@ class Functions:
         return length
 
     @staticmethod
+    def draw_hand_landmarks_ring_finger(frame, lm_list):
+        x1, y1 = lm_list[4][1], lm_list[4][2]
+        x2, y2 = lm_list[20][1], lm_list[20][2]  # 薬指の
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+
+        cv2.circle(frame, (x1, y1), 10, (255, 0, 255), cv2.FILLED)
+        cv2.circle(frame, (x2, y2), 10, (255, 0, 255), cv2.FILLED)
+        cv2.line(frame, (x1, y1), (x2, y2), (255, 0, 255), 5)
+        cv2.circle(frame, (cx, cy), 10, (255, 0, 255), cv2.FILLED)
+
+        length = math.hypot(x2 - x1, y2 - y1)
+
+        if length < 80:
+            cv2.circle(frame, (cx, cy), 40, (0, 255, 0), cv2.FILLED)
+
+        return length
+
+    @staticmethod
     def get_screen_shot(
         distance_input: DistanceInput,
         threshold_input: ThresholdInput,
