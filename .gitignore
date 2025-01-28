@@ -16,4 +16,5 @@ __pycache__/
 
 # screenshot images
 screenshots/
+.DS_Store
 
