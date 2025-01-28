@@ -88,7 +88,7 @@ class Functions:
 # printで一言表示したうえで、get_screen_shot関数を実行
 # print(
 #     f"Distance is {distance_input.distance_of_two_fingers}, threshold is {threshold_input.threshold} (this is default)"
-)
+# )
 # Functions.get_screen_shot(distance_input, threshold_input)
 
 
