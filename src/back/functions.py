@@ -42,8 +42,7 @@ class Functions:
 
     @staticmethod
     def get_screen_shot(
-        distance_input: DistanceInput,
-        threshold_input: ThresholdInput,
+        to_take_screenshot: bool, 
     ) -> bool:
         """
         It takes a screenshot and saves it to a directory if the distance of two fingers is less than or equal to the threshold.
@@ -56,7 +55,7 @@ class Functions:
             bool: True if the screenshot is taken and saved, False otherwise
         """
 
-        if distance_input.distance_of_two_fingers <= threshold_input.threshold:
+        if to_take_screenshot:
             # ディレクトリを定義、ない場合は作成する
             screenshots_dir = "screenshots"
             if not os.path.exists(screenshots_dir):
@@ -72,25 +71,59 @@ class Functions:
             return True
         else:
             # distance_of_two_fingersがthresholdより大きいので、スクショは撮らない
-            print(
-                f"Number is {distance_input.distance_of_two_fingers}, not taking screenshot"
-            )
             return False
 
+    @staticmethod
+    def draw_fox_hand_sign(frame, lm_list, threshold=30):
+        """
+        狐のハンドサイン（親指、中指、薬指をくっつける動作）を検出して描画する関数
 
-# ユーザーにdistance_of_two_fingersを入力させる
-# distance_of_two_fingers = float(input("Enter the distance of two fingers: "))
-# distance_input = DistanceInput(distance_of_two_fingers=distance_of_two_fingers)
+        Args:
+            frame: 描画対象のフレーム
+            lm_list: 手のランドマークのリスト
+            threshold: 指が「くっついている」と判定する距離の閾値（ピクセル）
 
-# デフォルトのthresholdの値を設定
-# threshold_input = ThresholdInput(threshold=10)
+        Returns:
+            is_fox_sign: 狐のサインを検出したかどうかのブール値
+        """
+        if len(lm_list) < 21:  # すべてのランドマークが検出されているか確認
+            return False
 
-# printで一言表示したうえで、get_screen_shot関数を実行
-# print(
-#     f"Distance is {distance_input.distance_of_two_fingers}, threshold is {threshold_input.threshold} (this is default)"
-# )
-# Functions.get_screen_shot(distance_input, threshold_input)
+        # 各指の先端と付け根のインデックス
+        THUMB_TIP, THUMB_MCP = 4, 2       # 親指の先端と付け根
+        MIDDLE_TIP, MIDDLE_PIP = 12, 10   # 中指の先端と第2関節
+        RING_TIP, RING_PIP = 16, 14       # 薬指の先端と第2関節
+        INDEX_TIP = 8                      # 人差し指の先端（開いているか確認用）
+        PINKY_TIP = 20                     # 小指の先端（開いているか確認用）
 
+        # 各指の座標を取得
+        thumb_tip = (lm_list[THUMB_TIP][1], lm_list[THUMB_TIP][2])
+        middle_tip = (lm_list[MIDDLE_TIP][1], lm_list[MIDDLE_TIP][2])
+        ring_tip = (lm_list[RING_TIP][1], lm_list[RING_TIP][2])
+        index_tip = (lm_list[INDEX_TIP][1], lm_list[INDEX_TIP][2])
+        pinky_tip = (lm_list[PINKY_TIP][1], lm_list[PINKY_TIP][2])
 
-# if __name__ == "get_screen_shot":
-#     get_screen_shot()
+        # 指同士の距離を計算
+        def calc_distance(p1, p2):
+            return math.hypot(p1[0] - p2[0], p1[1] - p2[1])
+
+        thumb_to_middle = calc_distance(thumb_tip, middle_tip)
+        thumb_to_ring = calc_distance(thumb_tip, ring_tip)
+        middle_to_ring = calc_distance(middle_tip, ring_tip)
+
+        # 人差し指と小指が開いているか確認（付け根との距離で判定）
+        index_raised = calc_distance(index_tip, thumb_tip) > threshold * 2
+        pinky_raised = calc_distance(pinky_tip, ring_tip) > threshold * 2
+
+        # 狐のサインの判定
+        is_fox_sign = (
+            thumb_to_middle < threshold and
+            thumb_to_ring < threshold and
+            middle_to_ring < threshold and
+            index_raised and
+            pinky_raised
+        )
+
+        # 検出結果の可視化
+        color = (0, 255, 0) if is_fox_sign else (0, 0, 255)  # 検出時は緑、未検出時は赤
+        return is_fox_sign

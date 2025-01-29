@@ -37,9 +37,11 @@ while True:
 
         if len(lm_list) != 0:
             length = functions.draw_hand_landmarks(frame, lm_list)
+            is_fox_hand_sign = functions.draw_fox_hand_sign(frame, lm_list)
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
+                is_success = functions.get_screen_shot()
                 last_executed_time = time.time()
                 print("Updating volume...")
                 if length >= 80 and length <= 800:
