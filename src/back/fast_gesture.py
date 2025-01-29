@@ -1,20 +1,19 @@
-import os
+# 組み込みライブラリ
 import time
+
+# サードパーティライブラリ
 import cv2
 
+# 自作モジュール
 from video_capture import VideoCapture
 import hand_tracking_module as htm
-from functions import set_volume, draw_hand_landmarks
+from functions import Functions
 import logger
 
-# ロガーの設定
+# 各種インスタンスの生成
 logger = logger.get_logger(name=__name__, debug=True)
-
-
-detector = htm.HandDetector(
-    detection_confidence=0.7,
-    tracking_confidence=0.7
-)
+detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
+functions = Functions()
 
 # parameters
 wCam, hCam = 300, 300
@@ -37,10 +36,12 @@ while True:
         lm_list = detector.find_position(frame)
 
         if len(lm_list) != 0:
-            length = draw_hand_landmarks(frame, lm_list)
+            length = functions.draw_hand_landmarks(frame, lm_list)
+            is_fox_hand_sign = functions.draw_fox_hand_sign(frame, lm_list)
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
+                is_success = functions.get_screen_shot()
                 last_executed_time = time.time()
                 print("Updating volume...")
                 if length >= 80 and length <= 800:
@@ -50,7 +51,7 @@ while True:
                 else:
                     volume = 0
 
-                set_volume(volume)
+                functions.set_volume(volume)
                 print(f"Length: {length}, Volume: {volume}")
 
     # フレームをリサイズ
@@ -58,15 +59,19 @@ while True:
 
     # フレームをJPEG圧縮して画質を落とす
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]  # 画質を20%に設定
-    result, encimg = cv2.imencode('.jpg', frame, encode_param)
+    result, encimg = cv2.imencode(".jpg", frame, encode_param)
     frame = cv2.imdecode(encimg, 1)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
 
-    cv2.putText(frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-    cv2.putText(frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    cv2.putText(
+        frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
+    cv2.putText(
+        frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
 
     cv2.imshow("frame", frame)
 

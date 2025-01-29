@@ -6,10 +6,7 @@ import math
 
 import one_app_challenge.src.back.hand_tracking_module as htm
 
-detector = htm.HandDetector(
-    detection_confidence=0.7,
-    tracking_confidence=0.7
-)
+detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 
 # parameters
 wCam, hCam = 640, 480
@@ -17,7 +14,9 @@ wCam, hCam = 640, 480
 
 # 現在の音量を取得する関数
 def get_current_volume():
-    result = os.popen("osascript -e 'output volume of (get volume settings)'").read().strip()
+    result = (
+        os.popen("osascript -e 'output volume of (get volume settings)'").read().strip()
+    )
     return int(result)
 
 
@@ -81,11 +80,15 @@ while cap.isOpened():
     fps = 1 / (cTime - pTime)
     pTime = cTime
 
-    cv2.putText(frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-    cv2.putText(frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    cv2.putText(
+        frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
+    cv2.putText(
+        frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+    )
 
     cv2.imshow("frame", frame)
 
-# TODO:処理が重いからかqで終了しないためwaitKeyを25に変更した。効果があるのかは確認が必要
+    # TODO:処理が重いからかqで終了しないためwaitKeyを25に変更した。効果があるのかは確認が必要
     if cv2.waitKey(25) & 0xFF == ord("q"):
         break
