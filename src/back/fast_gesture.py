@@ -17,7 +17,7 @@ functions = Functions()
 
 # parameters
 wCam, hCam = 3000, 3000
-resize_factor = 0.3  # リサイズの倍率
+resize_factor = 0.5  # リサイズの倍率
 
 
 cap = VideoCapture(0, wCam=wCam, hCam=hCam).start()
