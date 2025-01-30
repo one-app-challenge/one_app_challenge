@@ -16,7 +16,7 @@ detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 functions = Functions()
 
 # parameters
-wCam, hCam = 300, 300
+wCam, hCam = 3000, 3000
 resize_factor = 0.3  # リサイズの倍率
 
 
