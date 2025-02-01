@@ -1,9 +1,17 @@
 import cv2
 import mediapipe as mp
+import logger
+
+logger = logger.get_logger(name=__name__, debug=True)
 
 
 class HandDetector:
-    def __init__(self, mode=False, max_hands=2, detection_confidence=0.5, tracking_confidence=0.5):
+    def __init__(self,
+                 mode=False,
+                 max_hands=2,
+                 detection_confidence=0.5,
+                 tracking_confidence=0.5
+                 ):
         self.mode = mode
         self.max_hands = max_hands
         self.detection_confidence = detection_confidence
@@ -20,6 +28,7 @@ class HandDetector:
         self.mp_draw = mp.solutions.drawing_utils
 
     def find_hands(self, frame, draw=True):
+        logger.debug("Detecting hand landmarks...")
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(frame_rgb)
 
@@ -27,7 +36,6 @@ class HandDetector:
             for hand_landmarks in self.results.multi_hand_landmarks:
                 if draw:
                     self.mp_draw.draw_landmarks(frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
-
         return frame
 
     def find_position(self, frame, hand_number=0, draw=True):
@@ -40,5 +48,5 @@ class HandDetector:
                 lm_list.append([id, cx, cy])
                 if draw:
                     cv2.circle(frame, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
-
+        logger.debug(f"Landmarks: {lm_list}")
         return lm_list

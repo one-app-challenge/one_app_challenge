@@ -7,13 +7,17 @@ import cv2
 # 自作モジュール
 from video_capture import VideoCapture
 import hand_tracking_module as htm
-from functions import Functions
 import logger
+from functions import (
+    get_screen_shot,
+    set_volume,
+    draw_fox_hand_sign,
+    draw_hand_landmarks
+)
 
 # 各種インスタンスの生成
 logger = logger.get_logger(name=__name__, debug=True)
 detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
-functions = Functions()
 
 # parameters
 wCam, hCam = 300, 300
@@ -38,16 +42,16 @@ while True:
 
         if len(lm_list) != 0:
             logger.debug("Drawing hand landmarks...")
-            length = functions.draw_hand_landmarks(frame, lm_list)
+            length = draw_hand_landmarks(frame, lm_list)
             logger.debug(f"Length: {length}")
-            is_fox_hand_sign = functions.draw_fox_hand_sign(lm_list)
+            is_fox_hand_sign = draw_fox_hand_sign(lm_list)
             logger.debug(f"Is fox hand sign: {is_fox_hand_sign}")
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
                 if is_fox_hand_sign:
                     logger.debug("Taking a screenshot...")
-                    is_success = functions.get_screen_shot(is_fox_hand_sign)
+                    is_success = get_screen_shot(is_fox_hand_sign)
                     logger.debug(f"Is success: {is_success}")
                 last_executed_time = time.time()
                 print("Updating volume...")
@@ -58,14 +62,14 @@ while True:
                 else:
                     volume = 0
                 logger.debug("setting volume...")
-                functions.set_volume(volume)
+                set_volume(volume)
                 print(f"Length: {length}, Volume: {volume}")
 
+    # 以下処理はimshowで表示する画像を軽くするための処理
     # フレームをリサイズ
     frame = cv2.resize(frame, (0, 0), fx=resize_factor, fy=resize_factor)
-
     # フレームをJPEG圧縮して画質を落とす
-    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]  # 画質を20%に設定
+    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
     result, encimg = cv2.imencode(".jpg", frame, encode_param)
     frame = cv2.imdecode(encimg, 1)
 
