@@ -74,12 +74,11 @@ class Functions:
             return False
 
     @staticmethod
-    def draw_fox_hand_sign(frame, lm_list, threshold=30):
+    def draw_fox_hand_sign(lm_list, threshold=80):
         """
         狐のハンドサイン（親指、中指、薬指をくっつける動作）を検出して描画する関数
 
         Args:
-            frame: 描画対象のフレーム
             lm_list: 手のランドマークのリスト
             threshold: 指が「くっついている」と判定する距離の閾値（ピクセル）
 
@@ -89,19 +88,15 @@ class Functions:
         if len(lm_list) < 21:  # すべてのランドマークが検出されているか確認
             return False
 
-        # 各指の先端と付け根のインデックス
-        THUMB_TIP, THUMB_MCP = 4, 2       # 親指の先端と付け根
-        MIDDLE_TIP, MIDDLE_PIP = 12, 10   # 中指の先端と第2関節
-        RING_TIP, RING_PIP = 16, 14       # 薬指の先端と第2関節
-        INDEX_TIP = 8                      # 人差し指の先端（開いているか確認用）
-        PINKY_TIP = 20                     # 小指の先端（開いているか確認用）
+        # 各指の先端のインデックス
+        THUMB_TIP = 4       # 親指の先端
+        MIDDLE_TIP = 12     # 中指の先端
+        RING_TIP = 16       # 薬指の先端
 
         # 各指の座標を取得
         thumb_tip = (lm_list[THUMB_TIP][1], lm_list[THUMB_TIP][2])
         middle_tip = (lm_list[MIDDLE_TIP][1], lm_list[MIDDLE_TIP][2])
         ring_tip = (lm_list[RING_TIP][1], lm_list[RING_TIP][2])
-        index_tip = (lm_list[INDEX_TIP][1], lm_list[INDEX_TIP][2])
-        pinky_tip = (lm_list[PINKY_TIP][1], lm_list[PINKY_TIP][2])
 
         # 指同士の距離を計算
         def calc_distance(p1, p2):
@@ -111,19 +106,10 @@ class Functions:
         thumb_to_ring = calc_distance(thumb_tip, ring_tip)
         middle_to_ring = calc_distance(middle_tip, ring_tip)
 
-        # 人差し指と小指が開いているか確認（付け根との距離で判定）
-        index_raised = calc_distance(index_tip, thumb_tip) > threshold * 2
-        pinky_raised = calc_distance(pinky_tip, ring_tip) > threshold * 2
-
         # 狐のサインの判定
         is_fox_sign = (
             thumb_to_middle < threshold and
             thumb_to_ring < threshold and
-            middle_to_ring < threshold and
-            index_raised and
-            pinky_raised
+            middle_to_ring < threshold
         )
-
-        # 検出結果の可視化
-        color = (0, 255, 0) if is_fox_sign else (0, 0, 255)  # 検出時は緑、未検出時は赤
         return is_fox_sign

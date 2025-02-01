@@ -32,16 +32,23 @@ while True:
 
     # 手のランドマークを一定間隔で検出
     if time.time() - last_executed_time > 0.2:  # 0.2秒ごとに検出
+        logger.debug("Detecting hand landmarks...")
         frame = detector.find_hands(frame)
         lm_list = detector.find_position(frame)
 
         if len(lm_list) != 0:
+            logger.debug("Drawing hand landmarks...")
             length = functions.draw_hand_landmarks(frame, lm_list)
-            is_fox_hand_sign = functions.draw_fox_hand_sign(frame, lm_list)
+            logger.debug(f"Length: {length}")
+            is_fox_hand_sign = functions.draw_fox_hand_sign(lm_list)
+            logger.debug(f"Is fox hand sign: {is_fox_hand_sign}")
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
-                is_success = functions.get_screen_shot()
+                if is_fox_hand_sign:
+                    logger.debug("Taking a screenshot...")
+                    is_success = functions.get_screen_shot(is_fox_hand_sign)
+                    logger.debug(f"Is success: {is_success}")
                 last_executed_time = time.time()
                 print("Updating volume...")
                 if length >= 80 and length <= 800:
@@ -50,7 +57,7 @@ while True:
                     volume = 100
                 else:
                     volume = 0
-
+                logger.debug("setting volume...")
                 functions.set_volume(volume)
                 print(f"Length: {length}, Volume: {volume}")
 
