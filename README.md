@@ -1,6 +1,17 @@
 # one_app_challenge
 
-## ルール
+## 実行方法
+* /src でpoetry shellを実行して仮想環境を構築する
+* cd appの後、``` python app.py``` を実行する
+
+## 依存関係を調べる
+graphvizとpydepsをインストール  
+``` $ pydeps app.py --max-module-depth=1```
+の結果 
+
+![dependencies](./doc/img/dependencies.png)
+
+## 開発時のルール
 * ブランチはGit-flowに従う[参考](https://qiita.com/KosukeSone/items/514dd24828b485c69a05)
 * 全てのクラスはpydanticを使用する[参考](https://zenn.dev/taka256/articles/c7213c359dd2cf)
     ```
@@ -29,12 +40,3 @@
 * 仮想環境にはpoetryを使ってほしい。時間がない場合は任意の仮想環境で良い
 * flake8を使用して書式を整えてからMRを作成する 
 
-## 実行方法
-* src/ でpoetry shellを実行して仮想環境を構築する
-* cd backで、``` python fast_gesture.py``` を実行する
-
-## 依存関係を調べる
-graphvizとpydepsをインストール
-``` $ pydeps fast_gesture.py --max-module-depth=1``` のように調べたファイルを指定して実行する
-
-![dependencies](./doc/img/dependencies.png)

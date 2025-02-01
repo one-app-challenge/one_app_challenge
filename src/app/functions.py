@@ -43,7 +43,7 @@ def get_screen_shot(
     to_take_screenshot: bool,
 ) -> bool:
     """
-    It takes a screenshot and saves it to a directory if the distance of two 
+    It takes a screenshot and saves it to a directory if the distance of two
     fingers is less than or equal to the threshold.
 
     Args:
