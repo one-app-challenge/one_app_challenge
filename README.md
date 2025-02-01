@@ -2,7 +2,8 @@
 
 ## 実行方法
 * /src でpoetry shellを実行して仮想環境を構築する
-* cd appの後、``` python app.py``` を実行する
+* cd appの後、```python app.py``` を実行する
+* 止める場合は"q"ボタンを押す
 
 ## 依存関係を調べる
 graphvizとpydepsをインストール  
