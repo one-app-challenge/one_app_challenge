@@ -1,7 +1,6 @@
 import os
 import cv2
 import time
-import numpy as np
 import math
 
 import one_app_challenge.src.back.hand_tracking_module as htm
