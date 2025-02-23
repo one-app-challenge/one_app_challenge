@@ -34,7 +34,7 @@ class VideoCapture:
             with self.read_lock:
                 self.grabbed = grabbed
                 self.frame = frame
-            logger.debug("Frame updated.")
+            # logger.debug("Frame updated.")
 
     def read(self):
         with self.read_lock:

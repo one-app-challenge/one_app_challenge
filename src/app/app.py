@@ -1,17 +1,16 @@
 # 組み込みライブラリ
 import time
-
-# サードパーティライブラリ
+import math
 import cv2
+import streamlit as st
+import os
 
 # 自作モジュール
 from video_capture import VideoCapture
 import hand_tracking_module as htm
 import logger
 from functions import (
-    get_screen_shot,
-    set_volume,
-    draw_fox_hand_sign,
+    # set_volume,
     draw_hand_landmarks
 )
 
@@ -23,13 +22,25 @@ detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 wCam, hCam = 300, 300
 resize_factor = 0.3  # リサイズの倍率
 
-
 cap = VideoCapture(0, wCam=wCam, hCam=hCam).start()
 pTime = 0
 last_executed_time = 0
-volume = 0
 
-while True:
+st.title("Hand Gesture Recognition")
+stframe = st.empty()
+
+# セッションステートの初期化
+if "running" not in st.session_state:
+    st.session_state.running = True
+
+if "volume" not in st.session_state:
+    st.session_state.volume = 50
+
+# 停止再起動ボタン
+if st.button("Stop and Start"):
+    st.session_state.running = not st.session_state.running
+
+while st.session_state.running:
     success, frame = cap.read()
     if not success:
         break
@@ -44,26 +55,20 @@ while True:
             logger.debug("Drawing hand landmarks...")
             length = draw_hand_landmarks(frame, lm_list)
             logger.debug(f"Length: {length}")
-            is_fox_hand_sign = draw_fox_hand_sign(lm_list)
-            logger.debug(f"Is fox hand sign: {is_fox_hand_sign}")
 
             # 音量の取得と設定の頻度を減らす
             if time.time() - last_executed_time > 0.4:  # 0.4秒ごとに音量を更新
-                if is_fox_hand_sign:
-                    logger.debug("Taking a screenshot...")
-                    is_success = get_screen_shot(is_fox_hand_sign)
-                    logger.debug(f"Is success: {is_success}")
                 last_executed_time = time.time()
                 print("Updating volume...")
                 if length >= 80 and length <= 800:
-                    volume = int((length - 80) / (800 - 80) * 100)
+                    st.session_state.volume = int((length - 80) / (800 - 80) * 100)
                 elif length > 800:
-                    volume = 100
+                    st.session_state.volume = 100
                 else:
-                    volume = 0
+                    st.session_state.volume = 0
                 logger.debug("setting volume...")
-                set_volume(volume)
-                print(f"Length: {length}, Volume: {volume}")
+                # set_volume(volume)
+                print(f"Length: {length}, Volume: {st.session_state.volume}")
 
     # 以下処理はimshowで表示する画像を軽くするための処理
     # フレームをリサイズ
@@ -81,13 +86,16 @@ while True:
         frame, f"FPS: {int(fps)}", (20, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
     )
     cv2.putText(
-        frame, f"Volume: {volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
+        frame, f"Volume: {st.session_state.volume}", (20, 100), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3
     )
 
-    cv2.imshow("frame", frame)
+    # Streamlit でフレームを表示
+    stframe.image(frame, channels="BGR")
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+    # 音量を設定
+    os.system(f"osascript -e 'set volume output volume {st.session_state.volume}'")
+    # 音量スライダーを更新
+    st.session_state.volume = st.slider("Volume", 0, 100, st.session_state.volume)
 
 cap.stop()
 cv2.destroyAllWindows()
