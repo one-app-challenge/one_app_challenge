@@ -23,14 +23,14 @@ detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 wCam, hCam = 300, 300
 resize_factor = 0.3  # リサイズの倍率
 
+def main():
+    cap = VideoCapture(0, wCam=wCam, hCam=hCam).start()
+    pTime = 0
+    last_executed_time = 0
+    volume = 0
 
-cap = VideoCapture(0, wCam=wCam, hCam=hCam).start()
-pTime = 0
-last_executed_time = 0
-volume = 0
-
-while True:
-    success, frame = cap.read()
+    while True:
+        success, frame = cap.read()
     if not success:
         break
 
@@ -89,5 +89,7 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
-cap.stop()
-cv2.destroyAllWindows()
+    cap.stop()
+    cv2.destroyAllWindows()
+if __name__ == '__main__':
+    main()
