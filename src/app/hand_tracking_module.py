@@ -1,5 +1,5 @@
-import cv2
-import mediapipe as mp
+import cv2  # Ensure OpenCV is installed
+import mediapipe as mp  # Ensure MediaPipe is installed
 import logger
 
 logger = logger.get_logger(name=__name__, debug=True)
@@ -35,7 +35,9 @@ class HandDetector:
         if self.results.multi_hand_landmarks:
             for hand_landmarks in self.results.multi_hand_landmarks:
                 if draw:
-                    self.mp_draw.draw_landmarks(frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
+                    self.mp_draw.draw_landmarks(
+                        frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS
+                    )
         return frame
 
     def find_position(self, frame, hand_number=0, draw=True):

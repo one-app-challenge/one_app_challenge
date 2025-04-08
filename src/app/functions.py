@@ -1,9 +1,9 @@
 import os
-import cv2
+import cv2  # Ensure OpenCV is installed
 import math
 import time
-import pyautogui
-from pydantic import BaseModel
+import pyautogui  # Ensure PyAutoGUI is installed
+from pydantic import BaseModel  # Ensure Pydantic is installed
 
 
 class DistanceInput(BaseModel):

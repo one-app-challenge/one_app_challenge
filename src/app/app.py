@@ -2,7 +2,7 @@
 import time
 
 # サードパーティライブラリ
-import cv2
+import cv2  # Ensure OpenCV is installed
 
 # 自作モジュール
 from video_capture import VideoCapture
@@ -22,6 +22,7 @@ detector = htm.HandDetector(detection_confidence=0.7, tracking_confidence=0.7)
 # parameters
 wCam, hCam = 300, 300
 resize_factor = 0.3  # リサイズの倍率
+
 
 def main():
     cap = VideoCapture(0, wCam=wCam, hCam=hCam).start()
@@ -91,6 +92,7 @@ def main():
 
     cap.stop()
     cv2.destroyAllWindows()
+
 
 if __name__ == '__main__':
     main()

@@ -1,7 +1,7 @@
 from threading import Thread, Lock
 import threading
 import logger
-import cv2
+import cv2  # Ensure OpenCV is installed
 
 logger = logger.get_logger(name=__name__, debug=True)
 
@@ -18,14 +18,18 @@ class VideoCapture:
         logger.debug(f"Camera name: {name}, width: {wCam}, height: {hCam}")
 
     def start(self):
-        logger.debug(f"current thread ID: {threading.currentThread().getName()}")
+        logger.debug(
+            f"current thread ID: {threading.currentThread().getName()}"
+        )
         if self.started:
             logger.info("Asynchronous video capturing has already started.")
             return None
         self.started = True
         self.thread = Thread(target=self.update, args=())
         self.thread.start()
-        logger.debug(f"Video capturing started. Thread ID: {self.thread.ident}")
+        logger.debug(
+            f"Video capturing started. Thread ID: {self.thread.ident}"
+        )
         return self
 
     def update(self):
